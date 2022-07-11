@@ -2,7 +2,7 @@
 // CRIO_SOLUTION_END_MODULE_AUTH
 const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
-const { authService, userService, tokenService } = require("../services");
+const { authService, userService, tokenService ,otpService } = require("../services");
 
 /**
  * Perform the following steps:
@@ -72,14 +72,29 @@ const register = catchAsync(async (req, res) => {
  */
 const login = catchAsync(async (req, res) => {
   // CRIO_SOLUTION_START_MODULE_AUTH
-  const { email, password } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
+  const { contact , password } = req.body;
+  const user = await authService.loginUserWithContactAndPassword(contact, password);
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
   // CRIO_SOLUTION_END_MODULE_AUTH
 });
 
+const send_otp = catchAsync(async(req,res) => {
+  const {contact} = req.body;
+  const sms = await otpService.sendotp(contact);
+  res.send(httpStatus.OK , "OTP send Successfully");
+})
+
+const verify_otp = catchAsync(async(req,res)=>{
+  const {contact , otp} = req.body;
+  const verify = await otpService.getotp(contact , otp);
+  res.send(httpStatus.OK , "OTP Successfully Verified.");
+  
+})
+
 module.exports = {
   register,
   login,
+  send_otp,
+  verify_otp,
 };

@@ -36,14 +36,13 @@ app.use(compression());
 app.use(cors());
 app.options("*", cors());
 
-// TODO: CRIO_TASK_MODULE_AUTH - Initialize passport and add "jwt" authentication strategy
-// CRIO_SOLUTION_START_MODULE_AUTH
+// @TODO: MODULE_AUTH - Initialize passport and add "jwt" authentication strategy
 // Passport jwt authentication config
 app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 // use passport middleware
 // map "jwt" strategy to jwtStrategy file
-// CRIO_SOLUTION_END_MODULE_AUTH
+
 
 // Reroute all API request starting with "/v1" route
 app.use("/v1", routes);
@@ -58,5 +57,9 @@ app.use(errorConverter);
 
 // handle error
 app.use(errorHandler);
+
+
+
+
 
 module.exports = app;

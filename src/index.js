@@ -16,6 +16,29 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
     logger.info(`Listening to port ${config.port}`);
   });
 });
+
+
+//connecting to redis as well for CASHING
+const redis = require('redis');
+const client = redis.createClient();
+client.connect();
+
+client.on("error", (err) => {logger.info("Redis Error")});
+client.on('connect', () => {logger.info('Redis connecting...')});
+client.on('ready'       , () => { logger.info('Redis ready')});
+client.on('reconnecting', () => { logger.info('reconnecting') });
+
+
+
+
+
+
+
+
+// client.setex("Audumber", 3600, "value_audu");
+
+
+
 // CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
 
 // ------------- Don't Modify  -------------

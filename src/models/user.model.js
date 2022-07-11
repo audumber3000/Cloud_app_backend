@@ -1,12 +1,11 @@
-// CRIO_SOLUTION_START_MODULE_UNDERSTANDING_BASICS
-// CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
+
 const mongoose = require("mongoose");
 // NOTE - "validator" external library and not the custom middleware at src/middlewares/validate.js
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const config = require("../config/config");
+const { array } = require("joi");
 
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Complete userSchema, a Mongoose schema for "users" collection
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -14,28 +13,27 @@ const userSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    email: {
+    contact: {
       // CRIO_SOLUTION_START_MODULE_UNDERSTANDING_BASICS
-      type: String,
+      type: String  ,
       required: true,
       unique: true,
       trim: true,
       lowercase: true,
       // https://www.npmjs.com/package/validator
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error("Invalid email");
+      validate(value){
+        if(!validator.isMobilePhone("91"+value) || value.length<10){
+          throw new Error("Invalid Mobile")
         }
+        
       },
-      // CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
+
     },
     password: {
       type: String,
-      // CRIO_SOLUTION_START_MODULE_UNDERSTANDING_BASICS
       required: true,
       trim: true,
       minlength: 8,
-      // CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
       validate(value) {
         if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
           throw new Error(
@@ -43,9 +41,61 @@ const userSchema = mongoose.Schema(
           );
         }
       },
-      // CRIO_SOLUTION_START_MODULE_UNDERSTANDING_BASICS
-      // private: true, // used by the toJSON plugin
-      // CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
+    },
+
+    email:{
+      type: String  ,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      default: config.default_email,
+      validate(value){
+        if(!validator.isEmail(value)){
+          throw new Error("Email format is incorrect")
+        }
+      }
+
+    },
+    city:{
+      type: String  ,
+      required: true,
+      trim: true,
+      lowercase: true,
+      default: config.default_city
+
+    },
+    college:{
+      type: String  ,
+      required: true,
+      trim: true,
+      lowercase: true,
+      default: config.default_college
+
+    },
+    dob:{
+      type: String  ,
+      required: true,
+      trim: true,
+      lowercase: true,
+      default: config.default_dob
+
+    },
+    gender:{
+      type: String  ,
+      required: true,
+      trim: true,
+      lowercase: true,
+      default: config.default_gender
+
+    },
+    interest:{
+      type: Array ,
+      required: true,
+      trim: true,
+      lowercase: true,
+      default: config.default_interest
+
     },
     walletMoney: {
       // CRIO_SOLUTION_START_MODULE_UNDERSTANDING_BASICS
@@ -56,6 +106,7 @@ const userSchema = mongoose.Schema(
     },
     address: {
       type: String,
+      lowercase: true,
       default: config.default_address,
     },
   },
@@ -64,36 +115,22 @@ const userSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-// CRIO_SOLUTION_START_MODULE_UNDERSTANDING_BASICS
-// TODO (Rohin) - Evaluate if we can teach why we need the toJSON Plugin.
-// add plugin that converts mongoose to json
-// userSchema.plugin(toJSON);
-// userSchema.plugin(paginate);
-// CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
 
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement the isEmailTaken() static method
-/**
- * Check if email is taken
- * @param {string} email - The user's email
- * @returns {Promise<boolean>}
- */
-userSchema.statics.isEmailTaken = async function (email) {
-  // CRIO_SOLUTION_START_MODULE_UNDERSTANDING_BASICS
-  const user = await this.findOne({ email });
+
+
+//  Check if contact is taken
+userSchema.statics.isContactTaken = async function (contact) {
+  const user = await this.findOne({ contact });
   return !!user;
-  // CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
 };
 
-/**
- * Check if entered password matches the user's password
- * @param {string} password
- * @returns {Promise<boolean>}
- */
-userSchema.methods.isPasswordMatch = async function (password) {
-  // CRIO_SOLUTION_START_MODULE_AUTH
+
+
+//  Check if entered password matches the user's password
+ userSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
   return bcrypt.compare(password, user.password);
-  // CRIO_SOLUTION_END_MODULE_AUTH
+
 };
 
 // CRIO_SOLUTION_START_MODULE_AUTH

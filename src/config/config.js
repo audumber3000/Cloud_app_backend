@@ -8,6 +8,13 @@ const DEFAULT_WALLET_MONEY = 500;
 const DEFAULT_PAYMENT_OPTION = "PAYMENT_OPTION_DEFAULT";
 const DEFAULT_ADDRESSS = "ADDRESS_NOT_SET";
 
+const DEFAULT_EMAIL = "notset@gmail.com";
+const DEFAULT_CITY = "CITY_NOT_SET";
+const DEFAULT_COLLEGE = "COLLEGE_NOT_SET";
+const DEFAULT_GENDER = "GENDER_NOT_SET";
+const DEFAULT_INTEREST = ["INTEREST_NOT_SET"];
+const DEFAULT_DOB = "DOB_NOT_SET";
+
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const envVarsSchema = Joi.object()
@@ -48,6 +55,12 @@ module.exports = {
   default_wallet_money: DEFAULT_WALLET_MONEY,
   default_payment_option: DEFAULT_PAYMENT_OPTION,
   default_address: DEFAULT_ADDRESSS,
+  default_email : DEFAULT_EMAIL,
+  default_city : DEFAULT_CITY,
+  default_college : DEFAULT_COLLEGE,
+  default_dob : DEFAULT_DOB,
+  default_gender : DEFAULT_GENDER,
+  default_interest : DEFAULT_INTEREST,
   jwt: {
     secret: envVars.JWT_SECRET,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,

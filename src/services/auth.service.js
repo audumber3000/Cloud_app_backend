@@ -26,6 +26,15 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   // CRIO_SOLUTION_END_MODULE_AUTH
 };
 
+const loginUserWithContactAndPassword = async (contact , password) => {
+  const user = await userService.getUserByContact(contact);
+  if (!user || !(await user.isPasswordMatch(password))) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect contact or password");
+  }
+  return user;
+}
+
 module.exports = {
   loginUserWithEmailAndPassword,
+  loginUserWithContactAndPassword,
 };

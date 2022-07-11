@@ -28,6 +28,11 @@ const getUserById = async (id) => {
 const getUserByEmail = async (email) => {
   return User.findOne({ email });
 };
+
+
+const getUserByContact = async (contact) => {
+  return User.findOne({contact});
+}
 // CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement createUser(user)
@@ -54,8 +59,8 @@ const getUserByEmail = async (email) => {
  */
 // CRIO_SOLUTION_START_MODULE_UNDERSTANDING_BASICS
 const createUser = async (userBody) => {
-  if (await User.isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.OK, "Email already taken");
+  if (await User.isContactTaken(userBody.contact)) {
+    throw new ApiError(httpStatus.OK, "Account already exists with the same contact number.");
   }
   const user = await User.create(userBody);
   return user;
@@ -96,5 +101,7 @@ module.exports = {
   createUser,
   getUserAddressById,
   setAddress,
+  
+  getUserByContact,
 };
 // CRIO_SOLUTION_END_MODULE_UNDERSTANDING_BASICS
